@@ -13,7 +13,7 @@ services:
     depends_on:
       - database
     volumes:
-      - ${WORDPRESS_LOCAL_HOME}:/var/www/html
+      - ${WORDPRESS_LOCAL_HOME}:/opt/primereando
       - ${WORDPRESS_UPLOADS_CONFIG}:/usr/local/etc/php/conf.d/uploads.ini
       # - /path/to/repo/myTheme/:/var/www/html/wp-content/themes/myTheme
     environment:
@@ -57,8 +57,14 @@ services:
       - "80:80"    # http
       - "443:443"   # https
     volumes:
-      - ${WORDPRESS_LOCAL_HOME}:/var/www/html
-      - ${NGINX_CONF}:/etc/nginx/conf.d/default.conf
+#      - ${WORDPRESS_LOCAL_HOME}:/var/www/html
+#      - ${NGINX_CONF_SITE1}:/etc/nginx/conf.d/default.conf
+      - ${WORDPRESS_PRIMEREANDO_HOME}:/opt/primereando
+      - ${WORDPRESS_INFOVIRALES_HOME}:/opt/infovirales
+      - ${WORDPRESS_LRDP_HOME}:/opt/lrdp
+      - ${NGINX_CONF_SITE1}:/etc/nginx/conf.d/primereando.conf
+      - ${NGINX_CONF_SITE2}:/etc/nginx/conf.d/infovirales.conf
+      - ${NGINX_CONF_SITE3}:/etc/nginx/conf.d/lrdp.conf            
       - ${NGINX_SSL_CERTS}:/etc/ssl:ro
       - ${NGINX_LOGS}:/var/log/nginx
 
