@@ -67,6 +67,52 @@ services:
       - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
       - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
 
+  analogias:
+    # default port 9000 (FastCGI)
+    image: wordpress:php8.1-fpm-alpine
+    container_name: wp-wordpress-analogias
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - wordpress
+    depends_on:
+      - database
+    volumes:
+      - ${WORDPRESS_INFOVIRALES_HOME}:/var/www/html
+      - ${WORDPRESS_UPLOADS_CONFIG}:/usr/local/etc/php/conf.d/uploads.ini
+      # - /path/to/repo/myTheme/:/var/www/html/wp-content/themes/myTheme
+    working_dir: /opt/infovirales
+    environment:
+      - WORDPRESS_DB_HOST=$WORDPRESS_DB_HOST
+      - WORDPRESS_DB_NAME=infovirales
+      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+
+
+##Mañana revisar que esto no va
+  spartanit:
+    # default port 9000 (FastCGI)
+    image: wordpress:php7.4-fpm-alpine
+    container_name: wp-wordpress-infovirales
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - wordpress
+    depends_on:
+      - database
+    volumes:
+      - ${WORDPRESS_INFOVIRALES_HOME}:/var/www/html
+      - ${WORDPRESS_UPLOADS_CONFIG}:/usr/local/etc/php/conf.d/uploads.ini
+      # - /path/to/repo/myTheme/:/var/www/html/wp-content/themes/myTheme
+    working_dir: /opt/infovirales
+    environment:
+      - WORDPRESS_DB_HOST=$WORDPRESS_DB_HOST
+      - WORDPRESS_DB_NAME=infovirales
+      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+
   database:
     # default port 3306
     image: mariadb
@@ -112,6 +158,8 @@ services:
       - ${NGINX_CONF_SITE1}:/etc/nginx/conf.d/primereando.conf
       - ${NGINX_CONF_SITE2}:/etc/nginx/conf.d/infovirales.conf
       - ${NGINX_CONF_SITE3}:/etc/nginx/conf.d/lrdp.conf            
+      - ${NGINX_CONF_SITE4}:/etc/nginx/conf.d/analogiasconsultora.conf 
+      - ${NGINX_CONF_SITE5}:/etc/nginx/conf.d/spartanit.conf
       - ${NGINX_SSL_CERTS}:/etc/ssl:ro
       - ${NGINX_LOGS}:/var/log/nginx
 
