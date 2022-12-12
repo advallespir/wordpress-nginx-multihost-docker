@@ -1,5 +1,9 @@
 # WordPress (FPM Edition) - Docker
 
+The author of the initial repository is https://github.com/mjstealey/wordpress-nginx-docker
+I added multiple DB and multiple vhost
+
+
 Notes on deploying a single site [WordPress FPM Edition](https://hub.docker.com/_/wordpress/) instance as a docker deployment orchestrated by Docker Compose.
 
 - Use the FPM version of WordPress (v5-fpm)

@@ -1,9 +1,9 @@
 version: '3.9'
 services:
 
-  wordpress:
+  primereando:
     # default port 9000 (FastCGI)
-    image: wordpress:php7.4-fpm-alpine
+    image: wordpress:php8.0-fpm-alpine
     container_name: wp-wordpress-primereando
     env_file:
       - .env
@@ -13,12 +13,57 @@ services:
     depends_on:
       - database
     volumes:
-      - ${WORDPRESS_LOCAL_HOME}:/opt/primereando
+      - ${WORDPRESS_PRIMEREANDO_HOME}:/opt/primereando
       - ${WORDPRESS_UPLOADS_CONFIG}:/usr/local/etc/php/conf.d/uploads.ini
       # - /path/to/repo/myTheme/:/var/www/html/wp-content/themes/myTheme
+    working_dir: /opt/primereando
     environment:
       - WORDPRESS_DB_HOST=$WORDPRESS_DB_HOST
-      - WORDPRESS_DB_NAME=analogias
+      - WORDPRESS_DB_NAME=primereando
+      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+
+  lrdp:
+    # default port 9000 (FastCGI)
+    image: wordpress:php7.4-fpm-alpine
+    container_name: wp-wordpress-lrdp
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - wordpress
+    depends_on:
+      - database
+    volumes:
+      - ${WORDPRESS_LRDP_HOME}:/var/www/html
+      - ${WORDPRESS_UPLOADS_CONFIG}:/usr/local/etc/php/conf.d/uploads.ini
+      # - /path/to/repo/myTheme/:/var/www/html/wp-content/themes/myTheme
+    working_dir: /opt/lrdp
+    environment:
+      - WORDPRESS_DB_HOST=$WORDPRESS_DB_HOST
+      - WORDPRESS_DB_NAME=lrdp
+      - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
+      - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
+
+  infovirales:
+    # default port 9000 (FastCGI)
+    image: wordpress:php7.4-fpm-alpine
+    container_name: wp-wordpress-infovirales
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - wordpress
+    depends_on:
+      - database
+    volumes:
+      - ${WORDPRESS_INFOVIRALES_HOME}:/var/www/html
+      - ${WORDPRESS_UPLOADS_CONFIG}:/usr/local/etc/php/conf.d/uploads.ini
+      # - /path/to/repo/myTheme/:/var/www/html/wp-content/themes/myTheme
+    working_dir: /opt/infovirales
+    environment:
+      - WORDPRESS_DB_HOST=$WORDPRESS_DB_HOST
+      - WORDPRESS_DB_NAME=infovirales
       - WORDPRESS_DB_USER=${WORDPRESS_DB_USER}
       - WORDPRESS_DB_PASSWORD=${WORDPRESS_DB_PASSWORD}
 
@@ -52,7 +97,9 @@ services:
     networks:
       - wordpress
     depends_on:
-      - wordpress
+      - primereando
+      - lrdp
+      - infovirales
     ports:
       - "80:80"    # http
       - "443:443"   # https
@@ -83,5 +130,5 @@ services:
 
 networks:
   wordpress:
-    name: wp-wordpress-primereando
+    name: wp-wordpress
     driver: bridge
