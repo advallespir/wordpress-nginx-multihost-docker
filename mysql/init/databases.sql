@@ -14,9 +14,8 @@ CREATE DATABASE IF NOT EXISTS `auxiliar`;
 --CREATE DATABASE IF NOT EXISTS 'auxiliar';
 
 --Log configuration
-SET GLOBAL binlog_expire_logs_seconds = (60*60*24*2);
-SET PERSIST binlog_expire_logs_seconds = (60*60*24*2);
-
+--SET GLOBAL binlog_expire_logs_seconds = (60*60*24*2);
+--SET PERSIST binlog_expire_logs_seconds = (60*60*24*2);
 
 --GRANT ALL ON *.* TO 'wordpress'@'%';
 GRANT ALL ON `infovirales`.* TO 'wordpress'@'%';
@@ -26,3 +25,4 @@ GRANT ALL ON `analogias`.* TO 'wordpress'@'%';
 GRANT ALL ON `spartanit`.* TO 'wordpress'@'%';
 GRANT ALL ON `auxiliar`.* TO 'wordpress'@'%';
 GRANT ALL ON *.* TO 'wordpress'@'%';
+
