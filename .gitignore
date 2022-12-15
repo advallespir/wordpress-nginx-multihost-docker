@@ -1,11 +1,11 @@
 # environment file
-.env
+#.env
 
 # wordpress files
-wordpress
+#wordpress
 
 # mysql files
-dbdata
+#dbdata
 
 # logging output
 logs
