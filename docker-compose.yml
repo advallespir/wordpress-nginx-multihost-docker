@@ -126,7 +126,7 @@ services:
       - MYSQL_DATABASE=${WORDPRESS_DB_NAME}
       - MYSQL_USER=${MYSQL_USER}
       - MYSQL_PASSWORD=${MYSQL_PASSWORD}
-      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_ROOT_PASSWORD=rootpassword123!
     volumes:
       - ${MYSQL_LOCAL_HOME}:/var/lib/mysql
       - ./mysql/init:/docker-entrypoint-initdb.d
