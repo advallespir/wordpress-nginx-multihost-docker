@@ -4,10 +4,10 @@ The author of the initial repository is https://github.com/mjstealey/wordpress-n
 I added multiple DB and multiple vhost
 
 
-Notes on deploying a single site [WordPress FPM Edition](https://hub.docker.com/_/wordpress/) instance as a docker deployment orchestrated by Docker Compose.
+Notes on deploying a multiple sites with [WordPress FPM Edition 8.1 and 7.4](https://hub.docker.com/_/wordpress/) instance as a docker deployment orchestrated by Docker Compose.
 
-- Use the FPM version of WordPress (v5-fpm)
-- Use MySQL as the database (v8)
+- Use the FPM version of WordPress (v5,6-fpm)
+- Use MariaDB as the database (v10)
 - Use Nginx as the web server (v1)
 - Use Adminer as the database management tool (v4)
 - Include self-signed SSL certificate ([Let's Encrypt localhost](https://letsencrypt.org/docs/certificates-for-localhost/) format)
@@ -58,30 +58,57 @@ Copy the `env.template` file as `.env` and populate according to your environmen
 #  5. Variable is not defined
 
 # Wordpress Settings
-export WORDPRESS_LOCAL_HOME=./wordpress
+# Wordpress Settings
+#If you are on Windows use c:/**
+#export WORDPRESS_LOCAL_HOME=C:/Temp/Primereando
+#export WORDPRESS_PRIMEREANDO_HOME=C:/Temp/Primereando
+export WORDPRESS_PRIMEREANDO_HOME=/opt/primereando
+export WORDPRESS_INFOVIRALES_HOME=/opt/infovirales
+export WORDPRESS_LRDP_HOME=/opt/lrdp
+export WORDPRESS_ANALOGIAS_HOME=/opt/analogiasconsultora
+#export WORDPRESS_INFOVIRALES_HOME=C:/Temp/Infovirales
+#export WORDPRESS_LRDP_HOME=C:/Temp/LRDP
+#export WORDPRESS_ANALOGIAS_HOME=C:/Temp/Analogiasconsultora
+#export WORDPRESS_SPARTANIT_HOME=C:/Temp/SpartanIT
+#export WORDPRESS_AUXILIAR_HOME=C:/Temp/Auxiliar
 export WORDPRESS_UPLOADS_CONFIG=./config/uploads.ini
+export WORDPRESS_UPLOADS_CONFIG_MEMORY_32=./config/uploads_memory_32.ini
+export WORDPRESS_UPLOADS_CONFIG_MEMORY_64=./config/uploads_memory_64.ini
+export WORDPRESS_UPLOADS_CONFIG_MEMORY_128=./config/uploads_memory_128.ini
+export WORDPRESS_UPLOADS_CONFIG_MEMORY_256=./config/uploads_memory_256.ini
 export WORDPRESS_DB_HOST=database:3306
-export WORDPRESS_DB_NAME=wordpress
-export WORDPRESS_DB_USER=wordpress
-export WORDPRESS_DB_PASSWORD=password123!
+export WORDPRESS_DB_NAME=
+export WORDPRESS_DB_USER=
+export WORDPRESS_DB_PASSWORD=
 
 # MySQL Settings
-export MYSQL_LOCAL_HOME=./dbdata
+#export MYSQL_LOCAL_HOME=C:/Temp/DbMysql
+export MYSQL_LOCAL_HOME=/opt/DbMysql
+#export MYSQL_LOCAL_HOME=./dbdata
 export MYSQL_DATABASE=${WORDPRESS_DB_NAME}
+export MYSQL_DBCREATE=./mysql/init
 export MYSQL_USER=${WORDPRESS_DB_USER}
 export MYSQL_PASSWORD=${WORDPRESS_DB_PASSWORD}
-export MYSQL_ROOT_PASSWORD=rootpassword123!
+export MYSQL_ROOT_PASSWORD=jkrNcgBHofWEvBcCfhDC
 
 # Nginx Settings
 export NGINX_CONF=./nginx/default.conf
+export NGINX_CONF_SITE1=./nginx/primereando.conf
+export NGINX_CONF_SITE2=./nginx/infovirales.conf
+export NGINX_CONF_SITE3=./nginx/lrdp.conf
+export NGINX_CONF_SITE4=./nginx/analogiasconsultora.conf
+#export NGINX_CONF_SITE5=./nginx/spartanit.conf
 export NGINX_SSL_CERTS=./ssl
-export NGINX_LOGS=./logs/nginx
+#export NGINX_LOGS=./logs/nginx
+export NGINX_LOGS=/opt/nginx/logs
+
+# User Settings
 
 # User Settings
 # TBD
 ```
 
-Modify `nginx/default.conf` and replace `$host` and `8443` with your **Domain Name** and exposed **HTTPS Port** throughout the file
+Modify `nginx/default.conf` and replace `$host` with your **Domain Name**
 
 ```conf
 # default.conf
@@ -89,29 +116,29 @@ Modify `nginx/default.conf` and replace `$host` and `8443` with your **Domain Na
 server {
     listen 80;
     listen [::]:80;
-    server_name $host;
+    server_name example.com www.example.com;
     location / {
         # update port as needed for host mapped https
-        rewrite ^ https://$host:8443$request_uri? permanent;
+        rewrite ^ https://example.com:443$request_uri? permanent;
     }
 }
 
 server {
     listen 443 ssl http2;
     listen [::]:443 ssl http2;
-    server_name $host;
+    server_name example.com www.example.com;
     index index.php index.html index.htm;
-    root /var/www/html;
+    root /opt/example;
     server_tokens off;
     client_max_body_size 75M;
 
     # update ssl files as required by your deployment
-    ssl_certificate /etc/ssl/fullchain.pem;
+    ssl_certificate     /etc/ssl/fullchain.pem;
     ssl_certificate_key /etc/ssl/privkey.pem;
 
     # logging
-    access_log /var/log/nginx/wordpress.access.log;
-    error_log /var/log/nginx/wordpress.error.log;
+    access_log /var/log/nginx/example.access.log;
+    error_log  /var/log/nginx/example.error.log;
 
     # some security headers ( optional )
     add_header X-Frame-Options "SAMEORIGIN" always;
@@ -120,14 +147,20 @@ server {
     add_header Referrer-Policy "no-referrer-when-downgrade" always;
     add_header Content-Security-Policy "default-src * data: 'unsafe-eval' 'unsafe-inline'" always;
 
+    #cache
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 10m;
+
+
+
     location / {
-        try_files $uri $uri/ /index.php$is_args$args;
+        try_files $uri $uri/ /index.php?$args;
     }
 
     location ~ \.php$ {
-        try_files $uri = 404;
+        #try_files $uri = 404;
         fastcgi_split_path_info ^(.+\.php)(/.+)$;
-        fastcgi_pass wordpress:9000;
+        fastcgi_pass example:9000;
         fastcgi_index index.php;
         include fastcgi_params;
         fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
