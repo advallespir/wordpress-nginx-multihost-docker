@@ -9,8 +9,8 @@
 CREATE DATABASE IF NOT EXISTS `infovirales`;
 CREATE DATABASE IF NOT EXISTS `lrdp`;
 CREATE DATABASE IF NOT EXISTS `analogias`;
-CREATE DATABASE IF NOT EXISTS `spartanit`;
-CREATE DATABASE IF NOT EXISTS `auxiliar`;
+--CREATE DATABASE IF NOT EXISTS `spartanit`;
+--CREATE DATABASE IF NOT EXISTS `auxiliar`;
 --CREATE DATABASE IF NOT EXISTS 'auxiliar';
 
 --Log configuration
@@ -18,11 +18,11 @@ CREATE DATABASE IF NOT EXISTS `auxiliar`;
 --SET PERSIST binlog_expire_logs_seconds = (60*60*24*2);
 
 --GRANT ALL ON *.* TO 'wordpress'@'%';
-GRANT ALL ON `infovirales`.* TO 'wordpress'@'%';
+GRANT ALL ON `infovirales`.* TO 'Server2Digital'@'%';
 --GRANT ALL ON *.* wordpress.* to primereando@'%';
 GRANT ALL ON `lrdp`.* TO 'wordpress'@'%';
 GRANT ALL ON `analogias`.* TO 'wordpress'@'%';
-GRANT ALL ON `spartanit`.* TO 'wordpress'@'%';
-GRANT ALL ON `auxiliar`.* TO 'wordpress'@'%';
-GRANT ALL ON *.* TO 'wordpress'@'%';
+--GRANT ALL ON `spartanit`.* TO 'wordpress'@'%';
+--GRANT ALL ON `auxiliar`.* TO 'wordpress'@'%';
+GRANT ALL ON *.* TO 'Server2Digital'@'%';
 
